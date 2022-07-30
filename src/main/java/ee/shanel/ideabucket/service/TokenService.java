@@ -7,7 +7,9 @@ public interface TokenService
 {
     Mono<String> create(User id);
 
-    Mono<String> get(String id);
+    Mono<String> getByUserId(String id);
 
     Mono<String> getByEmail(String email);
+
+    Mono<Boolean> existsByToken(String token);
 }

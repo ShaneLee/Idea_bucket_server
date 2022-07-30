@@ -20,7 +20,7 @@ public class SenderServiceCapturer implements SenderService
         return senderService.send(userId, token);
     }
 
-    public String getToken(final String email)
+    public String getTokenFromEmail(final String email)
     {
         return tokensByEmail.get(email);
     }

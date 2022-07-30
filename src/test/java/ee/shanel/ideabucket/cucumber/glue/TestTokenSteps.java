@@ -29,7 +29,7 @@ public class TestTokenSteps
     {
         testTokenByReceived.put(
             TokenUtils.getReceived(),
-            Objects.requireNonNull(senderServiceCapturer.getToken(id))
+            Objects.requireNonNull(senderServiceCapturer.getTokenFromEmail(id))
         );
     }
 
@@ -38,7 +38,7 @@ public class TestTokenSteps
     {
         testTokenByReceived.put(
             key,
-            Objects.requireNonNull(senderServiceCapturer.getToken(id))
+            Objects.requireNonNull(senderServiceCapturer.getTokenFromEmail(id))
         );
     }
 
@@ -46,7 +46,7 @@ public class TestTokenSteps
     {
         testTokenByReceived.put(
             TokenUtils.getReceived(),
-            Objects.requireNonNull(senderServiceCapturer.getToken(value))
+            Objects.requireNonNull(senderServiceCapturer.getTokenFromEmail(value))
         );
     }
 

@@ -1,9 +1,12 @@
 package ee.shanel.ideabucket.service;
 
 import ee.shanel.ideabucket.factory.TokenFactory;
+import ee.shanel.ideabucket.model.Token;
 import ee.shanel.ideabucket.model.User;
+import ee.shanel.ideabucket.model.entity.TokenEntity;
 import ee.shanel.ideabucket.repository.TokenRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -11,6 +14,8 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class DefaultTokenService implements TokenService
 {
+    private final ConversionService conversionService;
+
     private final TokenFactory tokenFactory;
 
     private final TokenRepository tokenRepository;
@@ -20,18 +25,28 @@ public class DefaultTokenService implements TokenService
     {
         return Mono.just(user)
                 .map(tokenFactory::create)
-                .flatMap(val -> tokenRepository.put(user.getId(), val));
+                .mapNotNull(val -> conversionService.convert(val, TokenEntity.class))
+                .flatMap(tokenRepository::save)
+                .map(TokenEntity::getToken);
     }
 
     @Override
-    public Mono<String> get(final String id)
+    public Mono<String> getByUserId(final String id)
     {
-        return tokenRepository.get(id);
+        return tokenRepository.findById(id)
+                .map(TokenEntity::getToken);
     }
 
     @Override
     public Mono<String> getByEmail(final String id)
     {
-        return tokenRepository.getByEmail(id);
+        return tokenRepository.findByEmail(id)
+                .map(Token::getToken);
+    }
+
+    @Override
+    public Mono<Boolean> existsByToken(final String token)
+    {
+        return tokenRepository.existsByToken(token);
     }
 }

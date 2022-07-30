@@ -23,7 +23,8 @@ public class DefaultAuthenticationService implements AuthenticationService
     @Override
     public Mono<Authentication> authenticate(final String token)
     {
-        return tokenService.get(token)
+        return Mono.just(token)
+                .filterWhen(tokenService::existsByToken)
                 .flatMap(userService::findUser)
                 .map(val -> createAuthentication(token))
                 .switchIfEmpty(Mono.error(new BadCredentialsException("Invalid auth token for user: " + token)));
@@ -32,7 +33,8 @@ public class DefaultAuthenticationService implements AuthenticationService
     @Override
     public Mono<Authentication> authenticate(final Authentication authentication)
     {
-        return tokenService.get(authentication.getName())
+        return Mono.just(authentication.getName())
+                .filterWhen(tokenService::existsByToken)
                 .flatMap(userService::findUser)
                 .map(val -> createAuthentication(authentication.getName()));
     }

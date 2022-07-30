@@ -1,8 +1,9 @@
 package ee.shanel.ideabucket.factory;
 
+import ee.shanel.ideabucket.model.Token;
 import ee.shanel.ideabucket.model.User;
 
 public interface TokenFactory
 {
-    String create(User user);
+    Token create(User user);
 }

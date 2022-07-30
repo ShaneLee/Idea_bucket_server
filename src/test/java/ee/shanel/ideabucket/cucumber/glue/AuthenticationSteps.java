@@ -3,6 +3,7 @@ package ee.shanel.ideabucket.cucumber.glue;
 import ee.shanel.ideabucket.model.LoginRequest;
 import ee.shanel.ideabucket.model.MailingList;
 import ee.shanel.ideabucket.model.TestUser;
+import ee.shanel.ideabucket.model.entity.TokenEntity;
 import ee.shanel.ideabucket.repository.TokenRepository;
 import ee.shanel.ideabucket.repository.UserRepository;
 import io.cucumber.java.Before;
@@ -42,7 +43,8 @@ public class AuthenticationSteps
     public void theFollowingUser(final List<TestUser> users)
     {
         StepVerifier.create(Flux.fromIterable(users)
-                .flatMap(val -> tokenRepository.put(val.getEmail(), val.getToken())))
+                .map(val -> TokenEntity.builder().token(val.getToken()).email(val.getEmail()).build())
+                .flatMap(tokenRepository::save))
                 .thenConsumeWhile(Objects::nonNull)
                 .verifyComplete();
     }

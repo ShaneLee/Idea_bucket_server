@@ -29,6 +29,8 @@ Feature: Authentication Feature
       | email                    | token      |
       | clemfandango@example.com | <received> |
 
+      # TODO test for authenication after token expires
+
   Scenario: An anyone can access a public endpoint
     Given the following registration request is received with a 200 status
       | name | email                    |

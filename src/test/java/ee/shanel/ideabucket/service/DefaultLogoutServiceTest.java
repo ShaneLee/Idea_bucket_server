@@ -29,13 +29,13 @@ class DefaultLogoutServiceTest
     @Test
     void itLogsOut()
     {
-        Mockito.when(mockTokenRepository.delete(Mockito.anyString()))
-                .thenReturn(Mono.just(TOKEN));
+        Mockito.when(mockTokenRepository.deleteByToken(Mockito.anyString()))
+                .thenReturn(Mono.just(1L));
 
         StepVerifier.create(subject.logout(TOKEN))
                 .expectNext(Boolean.TRUE)
                 .verifyComplete();
 
-        Mockito.verify(mockTokenRepository).delete(TOKEN);
+        Mockito.verify(mockTokenRepository).deleteByToken(TOKEN);
     }
 }
