@@ -31,7 +31,7 @@ public class RegistrationController
                 .flatMap(registrationService::register)
                 .doOnNext(val -> LOG.info("User registered {}", val))
                 .flatMap(val -> Mono.just(ResponseEntity.ok().build()))
-                .onErrorReturn(UserAlreadyExistsException.class, ResponseEntity.status(403).body("User already exists"))
+                .onErrorReturn(UserAlreadyExistsException.class, ResponseEntity.status(409).body("User already exists"))
                 .switchIfEmpty(Mono.defer(() -> Mono.fromSupplier(() -> registration)
                         .doOnNext(val -> LOG.warn("Invalid registration submitted {}", val)))
                         .flatMap(val -> Mono.just(ResponseEntity.badRequest().build())));

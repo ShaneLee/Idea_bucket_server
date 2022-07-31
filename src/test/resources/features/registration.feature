@@ -44,7 +44,7 @@ Feature: Registration Feature
     When the following registration request is received with a 200 status
       | name | email                    |
       | clem | clemfandango@example.com |
-    Then the following registration request is received with a 403 status
+    Then the following registration request is received with a 409 status
       | name | email                    |
       | clem | clemfandango@example.com |
 
