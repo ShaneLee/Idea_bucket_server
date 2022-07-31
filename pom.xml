@@ -14,7 +14,7 @@
     <name>Idea Bucket</name>
     <description>A bucket for your ideas</description>
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <checkstyle-maven-plugin.version>3.0.0</checkstyle-maven-plugin.version>
         <checkstyle.version>7.1.2</checkstyle.version>
         <logback.version>1.2.11</logback.version>
