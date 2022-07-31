@@ -1,10 +1,13 @@
 package ee.shanel.ideabucket.cucumber.glue;
 
+import ee.shanel.ideabucket.repository.TokenRepository;
 import ee.shanel.ideabucket.service.SenderServiceCapturer;
 import ee.shanel.ideabucket.utils.TokenUtils;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import lombok.RequiredArgsConstructor;
+import reactor.test.StepVerifier;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +18,8 @@ public class TestTokenSteps
 {
     private final SenderServiceCapturer senderServiceCapturer;
 
+    private final TokenRepository tokenRepository;
+
     private Map<String, String> testTokenByReceived;
 
     @Before
@@ -22,6 +27,16 @@ public class TestTokenSteps
     {
         testTokenByReceived = new HashMap<>();
         senderServiceCapturer.clear();
+    }
+
+    @When("^the token (.*) is deleted$")
+    public void theTokenIsDeleted(final String token)
+    {
+        tokenRepository.deleteByToken(testTokenByReceived.get(token))
+                .as(StepVerifier::create)
+                .thenConsumeWhile(Objects::nonNull)
+                .verifyComplete();
+
     }
 
     @Then("^the user (.*) receives a token$")

@@ -29,7 +29,26 @@ Feature: Authentication Feature
       | email                    | token      |
       | clemfandango@example.com | <received> |
 
-      # TODO test for authenication after token expires
+  Scenario: A user gets a token following a login after a token expiry
+    Given the id generator returns the following ids in order
+      | clem-generated-id |
+    When the following registration request is received with a 200 status
+      | name | email                    |
+      | clem | clemfandango@example.com |
+    Then the user clemfandango@example.com receives a token
+    And the user requests the /rest/v1/ideas endpoint with the method GET the status is 200
+      | email                    | token      |
+      | clemfandango@example.com | <received> |
+    When the token <received> is deleted
+    And the following login token request receives a valid token
+      | email                    |
+      | clemfandango@example.com |
+    Then the user clemfandango@example.com receives a token with key <second-token>
+    And the user requests the /rest/v1/ideas endpoint with the method GET the status is 200
+      | email                    | token          |
+      | clemfandango@example.com | <second-token> |
+
+  # TODO test for authenication after token expires via the database
 
   Scenario: An anyone can access a public endpoint
     Given the following registration request is received with a 200 status
