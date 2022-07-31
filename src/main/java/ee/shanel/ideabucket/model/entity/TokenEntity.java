@@ -9,6 +9,7 @@ import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
 
@@ -27,6 +28,7 @@ public class TokenEntity
     private String email;
     @Indexed
     private String token;
+    @Field
     @Indexed(expireAfterSeconds = 3600)
     private Date creationTime;
 }
