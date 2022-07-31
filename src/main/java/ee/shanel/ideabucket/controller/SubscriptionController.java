@@ -45,6 +45,6 @@ public class SubscriptionController
                         .map(res -> Boolean.TRUE)
                         .orElse(Boolean.FALSE))
                 .map(val -> ResponseEntity.ok("Hello world!"))
-                .defaultIfEmpty(ResponseEntity.status(401).body(""));
+                .defaultIfEmpty(ResponseEntity.status(403).body(""));
     }
 }

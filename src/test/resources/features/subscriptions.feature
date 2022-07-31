@@ -8,7 +8,7 @@ Feature: Subscriptions
     And the user clemfandango@example.com receives a token
 
   Scenario: An authenticated user can access a protected endpoint
-    Given the user requests the /template endpoint with the method GET the status is 401
+    Given the user requests the /template endpoint with the method GET the status is 403
       | email                    | token      |
       | clemfandango@example.com | <received> |
     When the user with token <received> subscribes

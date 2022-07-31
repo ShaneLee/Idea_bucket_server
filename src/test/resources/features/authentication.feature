@@ -25,7 +25,7 @@ Feature: Authentication Feature
       | email                    | token      |
       | clemfandango@example.com | <received> |
     When the authenticated users logout
-    And the user requests the /rest/v1/logout endpoint with the method GET the status is 401
+    And the user requests the /rest/v1/logout endpoint with the method GET the status is 403
       | email                    | token      |
       | clemfandango@example.com | <received> |
 

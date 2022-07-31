@@ -26,6 +26,8 @@ public class SecurityConfiguration
                 .exceptionHandling()
                 .accessDeniedHandler((exchange, exception) -> Mono.fromRunnable(() -> exchange.getResponse()
                         .setStatusCode(HttpStatus.FORBIDDEN)))
+                .authenticationEntryPoint((exchange, exception) -> Mono.fromRunnable(() -> exchange.getResponse()
+                        .setStatusCode(HttpStatus.FORBIDDEN)))
                 .and()
                 .csrf().disable()
                 .httpBasic().disable()
