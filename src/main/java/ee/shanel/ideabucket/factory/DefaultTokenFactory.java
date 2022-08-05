@@ -2,39 +2,40 @@ package ee.shanel.ideabucket.factory;
 
 import ee.shanel.ideabucket.model.Token;
 import ee.shanel.ideabucket.model.User;
+import ee.shanel.ideabucket.security.TokenSecurityService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.codec.Hex;
 import org.springframework.stereotype.Component;
 
-import java.security.SecureRandom;
 import java.time.Clock;
 import java.util.Date;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 public class DefaultTokenFactory implements TokenFactory
 {
-    private static final SecureRandom RANDOM = new SecureRandom();
-
-    private static final int TOKEN_BYTE_SIZE = 16;
-
     private final Clock clock;
+
+    private final TokenSecurityService tokenSecurityService;
 
     @Override
     public Token create(final User id)
     {
         return new Token(
-                create(),
+                createToken(id),
                 id.getId(),
                 id.getEmail(),
                 Date.from(clock.instant())
         );
     }
 
-    private static String create()
+    private String createToken(final User user)
     {
-        final var bytes = new byte[TOKEN_BYTE_SIZE];
-        RANDOM.nextBytes(bytes);
-        return String.valueOf(Hex.encode(bytes));
+        return tokenSecurityService.generate(
+                Map.of(
+                        "name", user.getName(),
+                        "role", user.getRole().getUserRole()
+                )
+        );
     }
 }

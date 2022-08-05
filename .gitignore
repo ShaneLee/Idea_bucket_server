@@ -3,6 +3,7 @@ target/
 mvnw
 mvnw.cmd
 .mvn/
+src/main/resources/keys
 
 HELP.md
 target/
