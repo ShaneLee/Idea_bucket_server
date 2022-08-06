@@ -18,6 +18,7 @@ public class AccountSettings
 {
     private String userId;
     private Boolean emailsEnabled;
+    private EmailFrequency emailFrequency;
 
     @JsonIgnore
     public AccountSettings withUserId(final String id)

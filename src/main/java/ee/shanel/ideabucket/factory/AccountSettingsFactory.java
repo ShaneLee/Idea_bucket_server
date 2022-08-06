@@ -1,6 +1,7 @@
 package ee.shanel.ideabucket.factory;
 
 import ee.shanel.ideabucket.model.settings.AccountSettings;
+import ee.shanel.ideabucket.model.settings.EmailFrequency;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -9,8 +10,9 @@ import org.springframework.stereotype.Component;
 public class AccountSettingsFactory
 {
     private static final AccountSettings DEFAULT = new AccountSettings(
-           null,
-           false
+            null,
+            false,
+            EmailFrequency.Monthly
     );
 
     public AccountSettings createDefaultAccountSettings(final String userId)

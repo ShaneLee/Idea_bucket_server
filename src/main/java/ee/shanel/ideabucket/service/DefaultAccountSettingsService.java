@@ -4,6 +4,7 @@ import ee.shanel.ideabucket.factory.AccountSettingsFactory;
 import ee.shanel.ideabucket.model.User;
 import ee.shanel.ideabucket.model.entity.AccountSettingsEntity;
 import ee.shanel.ideabucket.model.settings.AccountSettings;
+import ee.shanel.ideabucket.reducer.AccountSettingsReducer;
 import ee.shanel.ideabucket.repository.AccountSettingsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
@@ -19,6 +20,9 @@ public class DefaultAccountSettingsService implements AccountSettingsService
     private final AccountSettingsRepository accountSettingsRepository;
 
     private final ConversionService conversionService;
+
+    private final AccountSettingsReducer reducer;
+
 
     @Override
     public Mono<AccountSettings> put(final AccountSettings accountSettings, final User user)
@@ -48,7 +52,10 @@ public class DefaultAccountSettingsService implements AccountSettingsService
     {
         return Mono.just(settings)
                 .mapNotNull(val -> conversionService.convert(val, AccountSettingsEntity.class))
-                .flatMap(accountSettingsRepository::save)
+                .flatMap(val -> accountSettingsRepository.findById(val.getUserId())
+                        .map(existing -> reducer.apply(existing, val))
+                        .defaultIfEmpty(val)
+                        .flatMap(accountSettingsRepository::save))
                 .mapNotNull(val -> conversionService.convert(val, AccountSettings.class));
     }
 }

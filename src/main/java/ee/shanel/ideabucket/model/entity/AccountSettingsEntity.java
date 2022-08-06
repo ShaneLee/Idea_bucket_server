@@ -1,5 +1,6 @@
 package ee.shanel.ideabucket.model.entity;
 
+import ee.shanel.ideabucket.model.settings.EmailFrequency;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -21,4 +22,5 @@ public class AccountSettingsEntity
     @Id
     private String userId;
     private Boolean emailsEnabled;
+    private EmailFrequency emailFrequency;
 }

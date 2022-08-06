@@ -27,6 +27,7 @@ public class AccountSettingsController
             final Authentication authentication,
             @RequestBody final AccountSettings accountSettings)
     {
+        // TODO validation if the account setting change requires a subscription?
         return Mono.just(authentication.getName())
                 .flatMap(userService::findUser)
                 .flatMap(val -> accountSettingsService.put(accountSettings, val))

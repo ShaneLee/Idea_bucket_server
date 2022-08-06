@@ -15,7 +15,8 @@ public class AccountSettingsToAccountSettingEntityConverter implements Converter
     {
         return new AccountSettingsEntity(
                 source.getUserId(),
-                source.getEmailsEnabled()
+                source.getEmailsEnabled(),
+                source.getEmailFrequency()
         );
     }
 }

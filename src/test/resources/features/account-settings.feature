@@ -8,14 +8,14 @@ Feature: Account Settings Feature
       | clem | clemfandango@example.com |
     Then the user clemfandango@example.com receives a token
     Given the following account settings are saved
-      | userId            | emailsEnabled |
-      | clem-generated-id | true          |
+      | userId            | emailsEnabled | emailFrequency |
+      | clem-generated-id | true          | Weekly         |
     And the user requests the account settings endpoint
       | token      |
       | <received> |
     Then the following account settings are returned
-      | userId            | emailsEnabled |
-      | clem-generated-id | true          |
+      | userId            | emailsEnabled | emailFrequency |
+      | clem-generated-id | true          | Weekly         |
 
   Scenario: A user registers and receives the default settings
     Given the id generator returns the following ids in order
@@ -28,10 +28,10 @@ Feature: Account Settings Feature
       | token      |
       | <received> |
     Then the following account settings are returned
-      | userId            | emailsEnabled |
-      | clem-generated-id | false         |
+      | userId            | emailsEnabled | emailFrequency |
+      | clem-generated-id | false         | Monthly        |
 
-  Scenario: user settings are updated via REST
+  Scenario: user settings are updated via REST and those not changed are not updated
     Given the id generator returns the following ids in order
       | clem-generated-id |
     When the following registration request is received with a 200 status
@@ -45,5 +45,5 @@ Feature: Account Settings Feature
       | token      |
       | <received> |
     Then the following account settings are returned
-      | userId            | emailsEnabled |
-      | clem-generated-id | true          |
+      | userId            | emailsEnabled | emailFrequency |
+      | clem-generated-id | true          | Monthly        |
