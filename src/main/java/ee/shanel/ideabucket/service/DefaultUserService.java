@@ -65,4 +65,10 @@ public class DefaultUserService implements UserService
             .mapNotNull(val -> conversionService.convert(val, User.class))
             .switchIfEmpty(Mono.error(new UserAlreadyExistsException(registration.getEmail())));
     }
+
+    @Override
+    public Mono<Boolean> revokeToken(final String token)
+    {
+        return null;
+    }
 }

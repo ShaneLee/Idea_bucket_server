@@ -1,6 +1,6 @@
 package ee.shanel.ideabucket.security;
 
-import ee.shanel.ideabucket.model.authentication.IdeaBucketRole;
+import ee.shanel.ideabucket.model.User;
 import ee.shanel.ideabucket.service.TokenService;
 import ee.shanel.ideabucket.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +20,16 @@ public class DefaultAuthenticationService implements AuthenticationService
 
     private final TokenService tokenService;
 
+    private final TokenSecurityService tokenSecurityService;
+
     @Override
     public Mono<Authentication> authenticate(final String token)
     {
         return Mono.just(token)
+                .filter(tokenSecurityService::validate)
                 .filterWhen(tokenService::existsByToken)
                 .flatMap(userService::findUser)
-                .map(val -> createAuthentication(token))
+                .map(DefaultAuthenticationService::createAuthentication)
                 .switchIfEmpty(Mono.error(new BadCredentialsException("Invalid auth token for user: " + token)));
     }
 
@@ -34,17 +37,18 @@ public class DefaultAuthenticationService implements AuthenticationService
     public Mono<Authentication> authenticate(final Authentication authentication)
     {
         return Mono.just(authentication.getName())
+                .filter(tokenSecurityService::validate)
                 .filterWhen(tokenService::existsByToken)
                 .flatMap(userService::findUser)
-                .map(val -> createAuthentication(authentication.getName()));
+                .map(DefaultAuthenticationService::createAuthentication);
     }
 
-    private static Authentication createAuthentication(final String id)
+    private static Authentication createAuthentication(final User user)
     {
         final Authentication authentication = new UsernamePasswordAuthenticationToken(
-                id,
+                user.getId(),
                 null,
-                AuthorityUtils.createAuthorityList(IdeaBucketRole.standard().toString()));
+                AuthorityUtils.createAuthorityList(user.getRole().toString()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
     }

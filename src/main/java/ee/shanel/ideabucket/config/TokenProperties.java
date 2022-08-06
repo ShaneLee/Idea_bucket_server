@@ -23,4 +23,5 @@ public class TokenProperties
     private final String publicKeyPath;
     private final String privateKeyPath;
     private final String algorithm;
+    private final String issuer;
 }

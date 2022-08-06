@@ -14,7 +14,7 @@ public class DefaultLogoutService implements LogoutService
     @Override
     public Mono<Boolean> logout(final String token)
     {
-        return repository.deleteByToken(token)
+        return repository.deleteByUserId(token)
                 .thenReturn(Boolean.TRUE);
     }
 }

@@ -54,6 +54,10 @@ public class PemUtils
 
     private static PrivateKey getPrivateKey(byte[] keyBytes, String algorithm)
     {
+        // I have no idea why this works
+        java.security.Security.addProvider(
+                new org.bouncycastle.jce.provider.BouncyCastleProvider()
+        );
         PrivateKey privateKey = null;
         try
         {

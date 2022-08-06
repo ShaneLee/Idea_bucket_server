@@ -11,6 +11,8 @@ public interface TokenRepository extends ReactiveCrudRepository<TokenEntity, Str
 
     Mono<Token> findByUserId(String userId);
 
+    Mono<Long> deleteByUserId(String userId);
+
     Mono<Long> deleteByToken(String token);
 
     Mono<Boolean> existsByToken(String token);

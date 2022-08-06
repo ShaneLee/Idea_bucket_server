@@ -15,4 +15,6 @@ public interface UserService
     Mono<User> findUserByEmail(String email);
 
     Mono<User> register(Registration registration);
+
+    Mono<Boolean> revokeToken(String token);
 }

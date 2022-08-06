@@ -67,7 +67,7 @@ public class AuthenticationSteps
     {
         users.forEach(user -> webClient.get()
                 .uri("/rest/v1/logout")
-                .headers(val -> val.setBearerAuth(user.getToken()))
+                .headers(val -> val.setBearerAuth(testTokenSteps.getToken(user.getToken())))
                 .exchange().expectStatus()
                 .isUnauthorized());
     }

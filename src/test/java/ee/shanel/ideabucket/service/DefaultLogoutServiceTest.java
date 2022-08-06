@@ -13,7 +13,7 @@ import reactor.test.StepVerifier;
 @ExtendWith(MockitoExtension.class)
 class DefaultLogoutServiceTest
 {
-    private static final String TOKEN = "TOKEN";
+    private static final String USER_ID = "ID";
 
     @Mock
     private TokenRepository mockTokenRepository;
@@ -29,13 +29,13 @@ class DefaultLogoutServiceTest
     @Test
     void itLogsOut()
     {
-        Mockito.when(mockTokenRepository.deleteByToken(Mockito.anyString()))
+        Mockito.when(mockTokenRepository.deleteByUserId(Mockito.anyString()))
                 .thenReturn(Mono.just(1L));
 
-        StepVerifier.create(subject.logout(TOKEN))
+        StepVerifier.create(subject.logout(USER_ID))
                 .expectNext(Boolean.TRUE)
                 .verifyComplete();
 
-        Mockito.verify(mockTokenRepository).deleteByToken(TOKEN);
+        Mockito.verify(mockTokenRepository).deleteByUserId(USER_ID);
     }
 }
