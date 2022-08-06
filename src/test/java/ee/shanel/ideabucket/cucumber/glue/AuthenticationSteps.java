@@ -110,4 +110,15 @@ public class AuthenticationSteps
         testTokenSteps.captureToken(loginRequest.getEmail());
     }
 
+    @Then("^the following login token request receives the status (.*)$")
+    public void theFollowingLoginTokenRequest(final Integer status, final LoginRequest loginRequest)
+    {
+        webClient.post()
+                .uri("/rest/v1/login")
+                .body(Mono.just(loginRequest), LoginRequest.class)
+                .exchange()
+                .expectStatus()
+                .isEqualTo(status);
+    }
+
 }

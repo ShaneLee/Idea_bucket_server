@@ -17,9 +17,6 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class IdeaController
 {
-    // TODO work on the authenication flow
-    // Register -> login -> check user exists -> generate temporary token -> return to client
-
     private final IdeaService ideaService;
 
     private final UserService userService;

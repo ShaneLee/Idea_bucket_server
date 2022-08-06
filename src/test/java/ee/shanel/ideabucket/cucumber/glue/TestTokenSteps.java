@@ -1,5 +1,6 @@
 package ee.shanel.ideabucket.cucumber.glue;
 
+import com.mongodb.assertions.Assertions;
 import ee.shanel.ideabucket.repository.TokenRepository;
 import ee.shanel.ideabucket.service.SenderServiceCapturer;
 import ee.shanel.ideabucket.utils.TokenUtils;
@@ -46,6 +47,12 @@ public class TestTokenSteps
             TokenUtils.getReceived(),
             Objects.requireNonNull(senderServiceCapturer.getTokenFromEmail(id))
         );
+    }
+
+    @Then("^the user (.*) doesn't receive a token$")
+    public void theUserDoesntReceivesAToken(final String id)
+    {
+        Assertions.assertNull(senderServiceCapturer.getTokenFromEmail(id));
     }
 
     @Then("^the user (.*) receives a token with key (.*)$")

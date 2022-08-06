@@ -59,3 +59,9 @@ Feature: Authentication Feature
       | email                    | token      |
       | clemfandango@example.com | <received> |
       | dave@example.com         |            |
+
+  Scenario: An unregistered user can't login
+    Given the following login token request receives the status 401
+      | name         | email                    |
+      | Steven Toast | yesICanHearYou@example.com |
+    And the user clemfandango@example.com doesn't receive a token
