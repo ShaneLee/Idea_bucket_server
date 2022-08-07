@@ -29,6 +29,6 @@ public class TokenEntity
     @Indexed
     private String token;
     @Field
-    @Indexed(expireAfterSeconds = 3600)
+    @Indexed(expireAfterSeconds = 172800)
     private Date creationTime;
 }
