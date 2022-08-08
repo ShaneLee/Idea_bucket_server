@@ -9,5 +9,7 @@ import reactor.core.publisher.Flux;
 public interface IdeaRepository extends ReactiveCrudRepository<IdeaEntity, String>
 {
     Flux<IdeaEntity> findAllByUserId(String userId);
+
+    Flux<IdeaEntity> findAllByUserIdAndCategory(String userId, String category);
 }
 

@@ -32,9 +32,12 @@ public class DefaultIdeaService implements IdeaService
     }
 
     @Override
-    public Flux<Idea> findIdeas(final User user)
+    public Flux<Idea> findIdeas(final User user, final String category)
     {
-        return ideaRepository.findAllByUserId(user.getId())
+        return Mono.just(user)
+                .flatMapMany(val -> category == null
+                        ? ideaRepository.findAllByUserId(user.getId())
+                        : ideaRepository.findAllByUserIdAndCategory(user.getId(), category))
                 .mapNotNull(val -> conversionService.convert(val, Idea.class));
     }
 

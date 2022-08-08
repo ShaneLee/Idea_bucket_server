@@ -24,6 +24,7 @@ public class IdeaEntity
     @Indexed
     private String userId;
     private String idea;
+    @Indexed
     private String category;
     private String timeSubmitted;
 }
