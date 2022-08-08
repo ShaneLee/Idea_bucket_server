@@ -1,5 +1,6 @@
 package ee.shanel.ideabucket.service;
 
+import ee.shanel.ideabucket.factory.TokenEmailFactory;
 import ee.shanel.ideabucket.model.Registration;
 import ee.shanel.ideabucket.model.User;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,8 @@ public class DefaultRegistrationService implements RegistrationService
 {
     private final AccountSettingsService accountSettingsService;
 
+    private final TokenEmailFactory registrationConfirmationEmailFactory;
+
     private final SenderService senderService;
 
     private final UserService userService;
@@ -26,7 +29,14 @@ public class DefaultRegistrationService implements RegistrationService
                 .flatMap(val -> Mono.just(val)
                         .flatMap(accountSettingsService::saveDefaultSettings)
                         .thenReturn(val))
-                .flatMap(val -> senderService.send(val.getEmail(), val.getToken())
-                        .thenReturn(val));
+                .flatMap(this::sendConfirmation);
+    }
+
+    private Mono<User> sendConfirmation(final User user)
+    {
+        return Mono.just(user)
+                .map(val -> registrationConfirmationEmailFactory.create(val, user.getToken()))
+                .flatMap(val -> senderService.send(val)
+                        .thenReturn(user));
     }
 }

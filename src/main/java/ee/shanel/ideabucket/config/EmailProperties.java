@@ -18,4 +18,5 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 public class EmailProperties
 {
     private final String sender;
+    private final String supportDestination;
 }

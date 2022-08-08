@@ -1,5 +1,6 @@
 package ee.shanel.ideabucket.service;
 
+import ee.shanel.ideabucket.factory.SubscriptionEmailFactory;
 import ee.shanel.ideabucket.model.SubscriptionSubmission;
 import ee.shanel.ideabucket.model.User;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,8 @@ public class DefaultSubscriptionService implements SubscriptionsService
 
     private final SenderService senderService;
 
+    private final SubscriptionEmailFactory factory;
+
     private final UserService userService;
 
     @Override
@@ -31,8 +34,10 @@ public class DefaultSubscriptionService implements SubscriptionsService
 
     private Mono<Boolean> sendConfirmation(final User user)
     {
-        return senderService.send(user.getId(), "")
-                .thenReturn(Boolean.TRUE);
+        return Mono.just(user)
+                .map(factory::create)
+                .flatMap(val -> senderService.send(val)
+                        .thenReturn(Boolean.TRUE));
     }
 
     private Mono<User> process(final User user, final SubscriptionSubmission submission)

@@ -2,7 +2,7 @@ package ee.shanel.ideabucket.cucumber.glue;
 
 import com.mongodb.assertions.Assertions;
 import ee.shanel.ideabucket.repository.TokenRepository;
-import ee.shanel.ideabucket.service.SenderServiceCapturer;
+import ee.shanel.ideabucket.service.TokenEmailFactoryCapturer;
 import ee.shanel.ideabucket.utils.TokenUtils;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
@@ -17,7 +17,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class TestTokenSteps
 {
-    private final SenderServiceCapturer senderServiceCapturer;
+    private final TokenEmailFactoryCapturer tokenEmailFactoryCapturer;
 
     private final TokenRepository tokenRepository;
 
@@ -27,7 +27,7 @@ public class TestTokenSteps
     public void beforeEachScenario()
     {
         testTokenByReceived = new HashMap<>();
-        senderServiceCapturer.clear();
+        tokenEmailFactoryCapturer.clear();
     }
 
     @When("^the token (.*) is deleted$")
@@ -45,14 +45,14 @@ public class TestTokenSteps
     {
         testTokenByReceived.put(
             TokenUtils.getReceived(),
-            Objects.requireNonNull(senderServiceCapturer.getTokenFromEmail(id))
+            Objects.requireNonNull(tokenEmailFactoryCapturer.getTokenFromEmail(id))
         );
     }
 
     @Then("^the user (.*) doesn't receive a token$")
     public void theUserDoesntReceivesAToken(final String id)
     {
-        Assertions.assertNull(senderServiceCapturer.getTokenFromEmail(id));
+        Assertions.assertNull(tokenEmailFactoryCapturer.getTokenFromEmail(id));
     }
 
     @Then("^the user (.*) receives a token with key (.*)$")
@@ -60,7 +60,7 @@ public class TestTokenSteps
     {
         testTokenByReceived.put(
             key,
-            Objects.requireNonNull(senderServiceCapturer.getTokenFromEmail(id))
+            Objects.requireNonNull(tokenEmailFactoryCapturer.getTokenFromEmail(id))
         );
     }
 
@@ -68,7 +68,7 @@ public class TestTokenSteps
     {
         testTokenByReceived.put(
             TokenUtils.getReceived(),
-            Objects.requireNonNull(senderServiceCapturer.getTokenFromEmail(value))
+            Objects.requireNonNull(tokenEmailFactoryCapturer.getTokenFromEmail(value))
         );
     }
 

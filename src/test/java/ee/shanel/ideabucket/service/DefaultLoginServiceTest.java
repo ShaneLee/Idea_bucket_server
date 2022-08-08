@@ -1,5 +1,6 @@
 package ee.shanel.ideabucket.service;
 
+import ee.shanel.ideabucket.factory.DefaultTokenEmailFactory;
 import ee.shanel.ideabucket.model.LoginRequest;
 import ee.shanel.ideabucket.model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mail.MailMessage;
+import org.springframework.mail.SimpleMailMessage;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -22,11 +25,16 @@ class DefaultLoginServiceTest
 
     private static final User USER = createUser();
 
+    private static final MailMessage MESSAGE = new SimpleMailMessage();
+
     @Mock
     private UserService mockUserService;
 
     @Mock
     private SenderService mockSenderService;
+
+    @Mock
+    private DefaultTokenEmailFactory mockTokenEmailFactory;
 
     @Mock
     private TokenService mockTokenService;
@@ -39,6 +47,7 @@ class DefaultLoginServiceTest
         subject = new DefaultLoginService(
                 mockUserService,
                 mockSenderService,
+                mockTokenEmailFactory,
                 mockTokenService
         );
     }
@@ -50,7 +59,9 @@ class DefaultLoginServiceTest
                 .thenReturn(Mono.just(USER));
         Mockito.when(mockTokenService.getByEmail(Mockito.anyString()))
                 .thenReturn(Mono.just(TOKEN));
-        Mockito.when(mockSenderService.send(Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(mockTokenEmailFactory.create(Mockito.any(), Mockito.anyString()))
+                .thenReturn(MESSAGE);
+        Mockito.when(mockSenderService.send(Mockito.any()))
                 .thenReturn(Mono.empty());
 
         StepVerifier.create(subject.login(REQUEST))
@@ -59,7 +70,8 @@ class DefaultLoginServiceTest
 
         Mockito.verify(mockUserService).findUserByEmail(EMAIL);
         Mockito.verify(mockTokenService).getByEmail(EMAIL);
-        Mockito.verify(mockSenderService).send(EMAIL, TOKEN);
+        Mockito.verify(mockTokenEmailFactory).create(USER, TOKEN);
+        Mockito.verify(mockSenderService).send(MESSAGE);
     }
 
     @Test
@@ -71,7 +83,12 @@ class DefaultLoginServiceTest
                 .thenReturn(Mono.empty());
         Mockito.when(mockTokenService.create(Mockito.any()))
                 .thenReturn(Mono.just(TOKEN));
-        Mockito.when(mockSenderService.send(Mockito.anyString(), Mockito.anyString()))
+        Mockito.when(mockTokenEmailFactory.create(Mockito.any(), Mockito.anyString()))
+                .thenReturn(MESSAGE);
+        Mockito.when(mockSenderService.send(Mockito.any()))
+                .thenReturn(Mono.empty());
+
+        Mockito.when(mockSenderService.send(Mockito.any()))
                 .thenReturn(Mono.empty());
 
         StepVerifier.create(subject.login(REQUEST))
@@ -81,7 +98,8 @@ class DefaultLoginServiceTest
         Mockito.verify(mockUserService).findUserByEmail(EMAIL);
         Mockito.verify(mockTokenService).getByEmail(EMAIL);
         Mockito.verify(mockTokenService).create(USER);
-        Mockito.verify(mockSenderService).send(EMAIL, TOKEN);
+        Mockito.verify(mockTokenEmailFactory).create(USER, TOKEN);
+        Mockito.verify(mockSenderService).send(MESSAGE);
     }
 
     @Test

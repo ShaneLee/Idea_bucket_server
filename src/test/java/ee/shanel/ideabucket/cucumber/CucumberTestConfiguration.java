@@ -1,9 +1,10 @@
 package ee.shanel.ideabucket.cucumber;
 
+import ee.shanel.ideabucket.factory.TokenEmailFactory;
 import ee.shanel.ideabucket.generator.IdGenerator;
 import ee.shanel.ideabucket.generator.TestIdGenerator;
 import ee.shanel.ideabucket.service.SenderService;
-import ee.shanel.ideabucket.service.SenderServiceCapturer;
+import ee.shanel.ideabucket.service.TokenEmailFactoryCapturer;
 import lombok.RequiredArgsConstructor;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -32,9 +33,16 @@ public class CucumberTestConfiguration
 
     @Primary
     @Bean
-    SenderService senderService(final SenderService senderService)
+    TokenEmailFactory tokenEmailFactory(final TokenEmailFactory defaultTokenEmailFactory)
     {
-        return new SenderServiceCapturer(new HashMap<>(), senderService);
+        return new TokenEmailFactoryCapturer(new HashMap<>(), defaultTokenEmailFactory);
+    }
+
+    @Primary
+    @Bean
+    SenderService senderServiceSpy(final SenderService senderService)
+    {
+        return Mockito.spy(senderService);
     }
 
     @Primary
