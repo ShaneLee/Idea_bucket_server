@@ -78,7 +78,7 @@ public class JwtTokenSecurityService implements TokenSecurityService
     private RSAPublicKey getPublicKey()
     {
         return (RSAPublicKey) PemUtils.readPublicKeyFromFile(
-                tokenProperties.getPublicKeyPath(),
+                tokenProperties.getPublicKey().getInputStream(),
                 tokenProperties.getAlgorithm()
         );
 
@@ -88,7 +88,7 @@ public class JwtTokenSecurityService implements TokenSecurityService
     private RSAPrivateKey getPrivateKey()
     {
         return (RSAPrivateKey) PemUtils.readPrivateKeyFromFile(
-                tokenProperties.getPrivateKeyPath(),
+                tokenProperties.getPrivateKey().getInputStream(),
                 tokenProperties.getAlgorithm()
         );
     }

@@ -3,10 +3,10 @@ package ee.shanel.ideabucket.security.pem;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -19,14 +19,9 @@ import java.security.spec.X509EncodedKeySpec;
 // FROM https://gist.github.com/lbalmaceda/9a0c7890c2965826c04119dcfb1a5469
 public class PemUtils
 {
-    private static byte[] parsePEMFile(File pemFile) throws IOException
+    private static byte[] parsePEMFile(final InputStream pemFile) throws IOException
     {
-        if (!pemFile.isFile() || !pemFile.exists())
-        {
-            throw new FileNotFoundException(String.format("The file '%s' doesn't exist.", pemFile.getAbsolutePath()));
-        }
-
-        PemReader reader = new PemReader(new FileReader(pemFile));
+        PemReader reader = new PemReader(new BufferedReader(new InputStreamReader(pemFile)));
         PemObject pemObject = reader.readPemObject();
         byte[] content = pemObject.getContent();
         reader.close();
@@ -75,15 +70,15 @@ public class PemUtils
         return privateKey;
     }
 
-    public static PublicKey readPublicKeyFromFile(String filepath, String algorithm) throws IOException
+    public static PublicKey readPublicKeyFromFile(InputStream file, String algorithm) throws IOException
     {
-        byte[] bytes = PemUtils.parsePEMFile(new File(filepath));
+        byte[] bytes = PemUtils.parsePEMFile(file);
         return PemUtils.getPublicKey(bytes, algorithm);
     }
 
-    public static PrivateKey readPrivateKeyFromFile(String filepath, String algorithm) throws IOException
+    public static PrivateKey readPrivateKeyFromFile(InputStream file, String algorithm) throws IOException
     {
-        byte[] bytes = PemUtils.parsePEMFile(new File(filepath));
+        byte[] bytes = PemUtils.parsePEMFile(file);
         return PemUtils.getPrivateKey(bytes, algorithm);
     }
 
