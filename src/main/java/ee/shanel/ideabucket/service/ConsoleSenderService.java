@@ -5,10 +5,9 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.mail.MailMessage;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-
-import javax.mail.internet.MimeMessage;
 
 @Slf4j
 @Service
@@ -20,8 +19,8 @@ public class ConsoleSenderService implements SenderService
     @SneakyThrows
     public Mono<Void> send(final MailMessage message)
     {
-        final MimeMessage msg = (MimeMessage) message;
-        LOG.info("Login: http://localhost:3000/token?token={}", msg.getContent().toString());
+        final var msg = (SimpleMailMessage) message;
+        LOG.info("Login: http://localhost:3000/token?token={}", msg.getText());
         return Mono.empty();
     }
 }
