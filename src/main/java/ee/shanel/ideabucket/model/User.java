@@ -45,4 +45,12 @@ public class User
                 .role(IdeaBucketRole.standard())
                 .build();
     }
+
+    @JsonIgnore
+    public User withSubscribed()
+    {
+        return this.toBuilder()
+                .role(IdeaBucketRole.subscribed())
+                .build();
+    }
 }

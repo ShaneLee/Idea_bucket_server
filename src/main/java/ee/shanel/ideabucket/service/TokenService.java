@@ -12,4 +12,6 @@ public interface TokenService
     Mono<String> getByEmail(String email);
 
     Mono<Boolean> existsByToken(String token);
+
+    Mono<User> refreshToken(User user);
 }

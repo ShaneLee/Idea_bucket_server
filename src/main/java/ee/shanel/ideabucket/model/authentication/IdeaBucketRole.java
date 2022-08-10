@@ -23,4 +23,9 @@ public class IdeaBucketRole
     {
         return new IdeaBucketRole("BUCKET_STANDARD");
     }
+
+    public static IdeaBucketRole subscribed()
+    {
+        return new IdeaBucketRole("BUCKET_SUBSCRIBED");
+    }
 }

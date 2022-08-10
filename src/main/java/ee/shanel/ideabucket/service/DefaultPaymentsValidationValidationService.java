@@ -9,10 +9,10 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class DefaultPaymentsService implements PaymentsService
+public class DefaultPaymentsValidationValidationService implements PaymentsValidationService
 {
     @Override
-    public Mono<Boolean> process(final SubscriptionSubmission submission)
+    public Mono<Boolean> validate(final SubscriptionSubmission submission)
     {
         return Mono.just(submission)
                 .doOnNext(val -> LOG.info("Processing payment {}", submission))

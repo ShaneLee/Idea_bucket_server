@@ -49,4 +49,13 @@ public class DefaultTokenService implements TokenService
     {
         return tokenRepository.existsByToken(token);
     }
+
+    @Override
+    public Mono<User> refreshToken(final User user)
+    {
+        return tokenRepository.deleteByUserId(user.getId())
+                .map(val -> user)
+                .flatMap(this::create)
+                .map(user::withToken);
+    }
 }

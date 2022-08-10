@@ -1,22 +1,28 @@
 package ee.shanel.ideabucket.cucumber.glue;
 
-import com.mongodb.assertions.Assertions;
+import ee.shanel.ideabucket.model.authentication.IdeaBucketRole;
 import ee.shanel.ideabucket.repository.TokenRepository;
+import ee.shanel.ideabucket.security.AuthenticationService;
 import ee.shanel.ideabucket.service.TokenEmailFactoryCapturer;
 import ee.shanel.ideabucket.utils.TokenUtils;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Assertions;
+import org.springframework.security.core.Authentication;
 import reactor.test.StepVerifier;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class TestTokenSteps
 {
+    private final AuthenticationService authenticationService;
+
     private final TokenEmailFactoryCapturer tokenEmailFactoryCapturer;
 
     private final TokenRepository tokenRepository;
@@ -62,6 +68,23 @@ public class TestTokenSteps
             key,
             Objects.requireNonNull(tokenEmailFactoryCapturer.getTokenFromEmail(id))
         );
+    }
+
+    @Then("^the token (.*) contains the role (.*)$")
+    public void verifyTokenRole(final String token, final IdeaBucketRole role)
+    {
+        authenticationService.authenticate(getToken(token))
+                .map(Authentication::getAuthorities)
+                .map(val -> val.stream().map(Object::toString).collect(Collectors.toList()))
+                .doOnNext(System.out::println)
+                .as(StepVerifier::create)
+                .assertNext(res -> Assertions.assertTrue(res.contains(role.toString())))
+                .verifyComplete();
+    }
+
+    public void saveToken(final String tokenKey, final String token)
+    {
+        testTokenByReceived.put(tokenKey, token);
     }
 
     public void captureToken(final String value)
